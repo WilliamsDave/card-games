@@ -5,17 +5,10 @@ let deck;
 let canHit = true;
 let dealerCards = [];
 let playerCards = [];
-
 // Initialize game on window load
 window.onload = function () {
-  initializeGame();
-};
-
-function initializeGame() {
-  buildDeck();
-  shuffleDeck();
   startGame();
-}
+};
 
 // Build a standard deck of cards
 function buildDeck() {
@@ -54,6 +47,8 @@ function shuffleDeck() {
 
 // Start the game by dealing cards
 function startGame() {
+  buildDeck();
+  shuffleDeck();
   hidden = deck.pop();
   dealerCards.push(hidden, deck.pop());
 
@@ -63,11 +58,31 @@ function startGame() {
   for (let i = 0; i < 2; i++) {
     playerDrawCard();
   }
-
+  document.getElementById("play-again").addEventListener("click", reset);
   document.getElementById("hit").addEventListener("click", hit);
   document.getElementById("stay").addEventListener("click", stay);
 }
+function reset() {
+  let parent = document.getElementById("your-cards");
+  while (parent.firstChild) {
+    parent.removeChild(parent.firstChild);
+  }
+  parent = document.getElementById("dealer-cards");
+  while (parent.firstChild) {
+    parent.removeChild(parent.firstChild);
+  }
+  img = document.createElement("img");
+  img.src = "./cards/BACK.png";
+  img.setAttribute("id", "hidden");
+  parent.appendChild(img);
 
+  playerCards = [];
+  dealerCards = [];
+  canHit = true;
+  yourSum = 0;
+  dealerSum = 0;
+  startGame();
+}
 // Handle the player's hit action
 function hit() {
   if (!canHit) return;
