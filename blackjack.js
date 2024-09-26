@@ -2,13 +2,12 @@ let dealerSum = 0;
 let yourSum = 0;
 let hidden;
 let deck;
-
-let canHit = true; 
+let canHit = true;
 let dealerCards = [];
 let playerCards = [];
 
 // Initialize game on window load
-window.onload = function() {
+window.onload = function () {
     initializeGame();
 }
 
@@ -26,7 +25,7 @@ function buildDeck() {
 
     for (let type of types) {
         for (let value of values) {
-            deck.push(`${value}-${type}`); // e.g., "A-C"
+            deck.push(`${value}-${type}`);
         }
     }
 }
@@ -42,21 +41,14 @@ function shuffleDeck() {
 // Start the game by dealing cards
 function startGame() {
     hidden = deck.pop();
-    dealerCards.push(hidden);
-    
-    const dealerVisibleCard = deck.pop();
-    dealerCards.push(dealerVisibleCard);
-    
-    dealerSum = calculateHandValue(dealerCards);
+    dealerCards.push(hidden, deck.pop());
 
-    displayCard(dealerVisibleCard, "dealer-cards");
-    updateDealerSum(dealerVisibleCard);
+    updateDealerSum(dealerCards.slice(1));
+    displayCard(dealerCards[1], "dealer-cards");
 
     for (let i = 0; i < 2; i++) {
         playerDrawCard();
     }
-    
-    updatePlayerSum();
 
     document.getElementById("hit").addEventListener("click", hit);
     document.getElementById("stay").addEventListener("click", stay);
@@ -67,11 +59,9 @@ function hit() {
     if (!canHit) return;
 
     playerDrawCard();
-
     if (yourSum > 21) {
         canHit = false;
         stay();
-        document.getElementById("results").innerText = "You Lose!";
     }
 }
 
@@ -80,7 +70,7 @@ function playerDrawCard() {
     const card = deck.pop();
     playerCards.push(card);
     yourSum = calculateHandValue(playerCards);
-    
+
     displayCard(card, "your-cards");
     updatePlayerSum();
 }
@@ -88,12 +78,24 @@ function playerDrawCard() {
 // Handle the stay action
 function stay() {
     revealDealerCard();
+    displayDealerScore();
 
-    while (dealerSum < 17) {
-        dealerHit();
-    }
+    const dealerHitWithDelay = () => {
+        if (dealerSum < 17) {
+            dealerHit();
+            setTimeout(dealerHitWithDelay, 1000); // Wait 1 second before the next hit
+        } else {
+            finalizeGame(); // Finalize the game when dealerSum is 17 or higher
+        }
+    };
 
-    finalizeGame();
+    // Start the dealer hitting after a short delay
+    setTimeout(dealerHitWithDelay, 1000);
+}
+
+function displayDealerScore() {
+    dealerSum = calculateHandValue(dealerCards);
+    document.getElementById("dealer-sum").innerText = dealerSum;
 }
 
 function revealDealerCard() {
@@ -101,29 +103,34 @@ function revealDealerCard() {
 }
 
 function finalizeGame() {
-    dealerSum = calculateHandValue(dealerCards);
     canHit = false;
-
     const resultMessage = determineResult();
-    document.getElementById("dealer-sum").innerText = dealerSum;
-    document.getElementById("your-sum").innerText = yourSum;
     document.getElementById("results").innerText = resultMessage;
 }
 
 function determineResult() {
-    if (yourSum > 21) return "You Lose!";
-    if (dealerSum > 21) return "You Win!";
-    if (yourSum === dealerSum) return "Tie!";
-    return yourSum > dealerSum ? "You Win!" : "You Lose!";
+    //If player busts they always lose
+    if (yourSum > 21) return "You Lose";
+
+    //If player doesn't bust but dealer does
+    if (yourSum < 21 && dealerSum > 21) return "You win";
+
+    //Blackjack player win 
+    if (yourSum === 21 && dealerSum !== 21) return "You win - blackjack";
+
+    //If there is a tie that's not a bust 
+    if (yourSum === dealerSum) return "Push";
+
+    //If neither busts or ties see who is higher
+    return yourSum > dealerSum ? "You Win" : "You Lose";
 }
 
 // Draw a card for the dealer
 function dealerHit() {
     const card = deck.pop();
     dealerCards.push(card);
-    dealerSum = calculateHandValue(dealerCards);
-    
     displayCard(card, "dealer-cards");
+    displayDealerScore();
 }
 
 // Calculate the total value of a hand
@@ -134,11 +141,11 @@ function calculateHandValue(hand) {
     hand.forEach(card => {
         const value = getValue(card);
         totalValue += value;
-        if (card[0] === 'A') aceCount++;
+        if (value === 11) aceCount++; // Count Aces
     });
 
     while (totalValue > 21 && aceCount > 0) {
-        totalValue -= 10; 
+        totalValue -= 10;
         aceCount--;
     }
 
@@ -148,11 +155,7 @@ function calculateHandValue(hand) {
 // Get the value of a single card
 function getValue(card) {
     const value = card.split("-")[0];
-
-    if (isNaN(value)) {
-        return value === "A" ? 11 : 10; 
-    }
-    return parseInt(value);
+    return isNaN(value) ? (value === "A" ? 11 : 10) : parseInt(value);
 }
 
 // Display a card image
@@ -162,12 +165,13 @@ function displayCard(card, elementId) {
     document.getElementById(elementId).append(cardImg);
 }
 
-// Update dealer's visible sum
-function updateDealerSum(card) {
-    document.getElementById("dealer-sum").innerText = getValue(card);
-}
-
 // Update player's sum display
 function updatePlayerSum() {
     document.getElementById("your-sum").innerText = yourSum;
+}
+
+// Update dealer's visible sum
+function updateDealerSum(cards) {
+    dealerSum = calculateHandValue(cards);
+    document.getElementById("dealer-sum").innerText = dealerSum;
 }
