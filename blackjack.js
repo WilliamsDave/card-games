@@ -75,6 +75,7 @@ function reset() {
   img.src = "./cards/BACK.png";
   img.setAttribute("id", "hidden");
   parent.appendChild(img);
+  document.getElementById("results").innerText = "";
 
   playerCards = [];
   dealerCards = [];
