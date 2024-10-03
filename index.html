@@ -1,26 +1,30 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Black Jack</title>
-        <link rel="stylesheet" href="styles.css">
-        <script src="blackjack.js"></script>
-    </head>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Black Jack</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="blackjack.js" defer></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.0.2/tailwind.min.css" rel="stylesheet">
+</head>
 
-    <body>
-        <h2>Dealer: <span id="dealer-sum"></span></h2>
-        <div id="dealer-cards">
-            <img id="hidden" src="./cards/BACK.png">
-        </div>
+<body class="flex flex-col items-center justify-center min-h-screen bg-gray-100">
+    <h2 class="text-2xl font-bold mb-4">Dealer: <span id="dealer-sum" class="font-normal"></span></h2>
+    <div id="dealer-cards" class="flex mb-6">
+        <img id="hidden" src="./cards/BACK.png" class="h-32 w-auto mx-1">
+    </div>
 
-        <h2>You: <span id="your-sum"></span></h2>
-        <div id="your-cards"></div>
+    <h2 class="text-2xl font-bold mb-4">You: <span id="your-sum" class="font-normal"></span></h2>
+    <div id="your-cards" class="flex mb-6"></div>
 
-        <br>
-        <button id="hit">Hit</button>
-        <button id="stay">Stay</button>
-        <p id="results"></p>
-        <button id="play-again">Play Again</button>
-    </body>
+    <div class="space-x-4 mb-4">
+        <button id="hit" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Hit</button>
+        <button id="stay" class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600">Stay</button>
+    </div>
+    
+    <button id="play-again" class="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600">Play Again</button>
+    <p id="results" class="text-xl font-semibold mb-4 h-10"></p>
+
+</body>
 </html>

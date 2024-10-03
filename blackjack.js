@@ -74,6 +74,7 @@ function reset() {
   img = document.createElement("img");
   img.src = "./cards/BACK.png";
   img.setAttribute("id", "hidden");
+  img.className = "h-32 w-auto mx-1";
   parent.appendChild(img);
   document.getElementById("results").innerText = "";
 
@@ -91,8 +92,9 @@ function hit() {
   playerDrawCard();
   if (yourSum > 21) {
     canHit = false;
-    stay();
+    setTimeout(stay, 500);
   }
+
 }
 
 // Draw a card for the player
@@ -113,14 +115,14 @@ function stay() {
   const dealerHitWithDelay = () => {
     if (dealerSum < 17) {
       dealerHit();
-      setTimeout(dealerHitWithDelay, 1000); // Wait 1 second before the next hit
+      setTimeout(dealerHitWithDelay, 500); // Wait 1 second before the next hit
     } else {
       finalizeGame(); // Finalize the game when dealerSum is 17 or higher
     }
   };
 
   // Start the dealer hitting after a short delay
-  setTimeout(dealerHitWithDelay, 1000);
+  setTimeout(dealerHitWithDelay, 500);
 }
 
 function displayDealerScore() {
@@ -192,6 +194,7 @@ function getValue(card) {
 function displayCard(card, elementId) {
   const cardImg = document.createElement("img");
   cardImg.src = `./cards/${card}.png`;
+  cardImg.className = "h-32 w-auto mx-1"
   document.getElementById(elementId).append(cardImg);
 }
 
