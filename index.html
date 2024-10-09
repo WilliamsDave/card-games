@@ -10,21 +10,43 @@
 </head>
 
 <body class="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-    <h2 class="text-2xl font-bold mb-4">Dealer: <span id="dealer-sum" class="font-normal"></span></h2>
-    <div id="dealer-cards" class="flex mb-6">
-        <img id="hidden" src="./cards/BACK.png" class="h-32 w-auto mx-1">
+
+    <div id="home-screen" class="flex flex-col items-center">
+        <h1 class="text-4xl font-bold mb-4">Welcome to Blackjack!</h1>
+        <h2 class="text-2xl font-bold mb-4">More games coming soon, euchre in progress</h1>
+        <button id="start-game" class="px-6 py-3 bg-blue-500 text-white rounded hover:bg-blue-600">Play</button>
     </div>
 
-    <h2 class="text-2xl font-bold mb-4">You: <span id="your-sum" class="font-normal"></span></h2>
-    <div id="your-cards" class="flex mb-6"></div>
+    <div id="game-screen" class="hidden flex flex-col items-center">
+        <h1 class="text-4xl p-8 font-bold mb-4">David's Casino</h2>
+        <h2 class="text-2xl font-bold mb-4">Dealer: <span id="dealer-sum" class="font-normal"></span></h2>
+        <div id="dealer-cards" class="flex mb-6">
+            <img id="hidden" src="./cards/BACK.png" class="h-32 w-auto mx-1">
+        </div>
 
-    <div class="space-x-4 mb-4">
-        <button id="hit" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Hit</button>
-        <button id="stay" class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600">Stay</button>
+        <h2 class="text-2xl font-bold mb-4">You: <span id="your-sum" class="font-normal"></span></h2>
+        <div id="your-cards" class="flex mb-6"></div>
+
+        <div class="space-x-4 mb-4">
+            <button id="hit" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Hit</button>
+            <button id="stay" class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600">Stay</button>
+        </div>
+        
+        <button id="play-again" class="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600">Play Again</button>
+        <p id="results" class="text-xl font-semibold mb-4 h-10"></p>
     </div>
-    
-    <button id="play-again" class="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600">Play Again</button>
-    <p id="results" class="text-xl font-semibold mb-4 h-10"></p>
+
+    <script>
+        const homeScreen = document.getElementById('home-screen');
+        const gameScreen = document.getElementById('game-screen');
+        const startGameButton = document.getElementById('start-game');
+
+        startGameButton.addEventListener('click', () => {
+            homeScreen.classList.add('hidden');
+            gameScreen.classList.remove('hidden');
+            // Initialize the game here, e.g., reset scores, shuffle cards, etc.
+        });
+    </script>
 
 </body>
 </html>
